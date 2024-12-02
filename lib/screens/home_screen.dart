@@ -98,7 +98,7 @@ class HomeScreen extends StatelessWidget {
 
                   // Link to Repository
                   ElevatedButton(
-                    onPressed: () => _launchURL('https://github.com/MariaJoseDominguezCosta/chat_voice_bot'),
+                    onPressed: () => _launchURL('https://github.com/MariaJoseDominguezCosta/chat_bot_recu'),
                     child: const Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
