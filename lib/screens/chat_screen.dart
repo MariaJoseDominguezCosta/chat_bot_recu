@@ -25,9 +25,12 @@ class _ChatScreenState extends State<ChatScreen> {
     });
 
     // Listen for connectivity changes
-    Connectivity().onConnectivityChanged.listen((List<ConnectivityResult> results) {
+    Connectivity()
+        .onConnectivityChanged
+        .listen((List<ConnectivityResult> results) {
       setState(() {
-        _isConnected = results.isNotEmpty && results.first != ConnectivityResult.none;
+        _isConnected =
+            results.isNotEmpty && results.first != ConnectivityResult.none;
       });
     });
   }
@@ -51,120 +54,121 @@ class _ChatScreenState extends State<ChatScreen> {
           ),
         ],
       ),
-      body: !_isConnected 
-        ? Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Icon(
-                  Icons.signal_wifi_off,
-                  size: 100,
-                  color: Colors.grey,
-                ),
-                const SizedBox(height: 20),
-                Text(
-                  'No internet connection',
-                  style: Theme.of(context).textTheme.titleLarge,
-                ),
-                const SizedBox(height: 10),
-                Text(
-                  'Please check your network settings',
-                  style: Theme.of(context).textTheme.bodyMedium,
-                ),
-              ],
-            ),
-          )
-        : Column(
-        children: [
-          Expanded(
-            child: Consumer<ChatProvider>(
-              builder: (context, chatProvider, child) {
-                return ListView.builder(
-                  padding: const EdgeInsets.all(8),
-                  itemCount: chatProvider.messages.length,
-                  itemBuilder: (context, index) {
-                    final message = chatProvider.messages[index];
-                    return Align(
-                      alignment: message.isUser
-                          ? Alignment.centerRight
-                          : Alignment.centerLeft,
-                      child: Container(
-                        margin: const EdgeInsets.symmetric(
-                          vertical: 4,
-                          horizontal: 8,
-                        ),
-                        padding: const EdgeInsets.all(12),
-                        decoration: BoxDecoration(
-                          color: message.isUser
-                              ? Colors.blue[100]
-                              : Colors.grey[200],
-                          borderRadius: BorderRadius.circular(15),
-                        ),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            if (!message.isUser)
-                              const Icon(Icons.smart_toy, size: 20),
-                            if (message.isUser)
-                              const Icon(Icons.person, size: 20),
-                            const SizedBox(width: 8),
-                            Flexible(
-                              child: Text(message.content),
-                            ),
-                          ],
-                        ),
-                      ),
-                    );
-                  },
-                );
-              },
-            ),
-          ),
-          Consumer<ChatProvider>(
-            builder: (context, chatProvider, child) {
-              if (chatProvider.isLoading) {
-                return const Padding(
-                  padding: EdgeInsets.all(8.0),
-                  child: CircularProgressIndicator(),
-                );
-              }
-              return const SizedBox();
-            },
-          ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Row(
+      body: !_isConnected
+          ? Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Icon(
+                    Icons.signal_wifi_off,
+                    size: 100,
+                    color: Colors.grey,
+                  ),
+                  const SizedBox(height: 20),
+                  Text(
+                    'No internet connection',
+                    style: Theme.of(context).textTheme.titleLarge,
+                  ),
+                  const SizedBox(height: 10),
+                  Text(
+                    'Please check your network settings',
+                    style: Theme.of(context).textTheme.bodyMedium,
+                  ),
+                ],
+              ),
+            )
+          : Column(
               children: [
                 Expanded(
-                  child: TextField(
-                    controller: _controller,
-                    decoration: const InputDecoration(
-                      hintText: 'Type a message...',
-                      border: OutlineInputBorder(),
-                    ),
+                  child: Consumer<ChatProvider>(
+                    builder: (context, chatProvider, child) {
+                      return ListView.builder(
+                        padding: const EdgeInsets.all(8),
+                        itemCount: chatProvider.messages.length,
+                        itemBuilder: (context, index) {
+                          final message = chatProvider.messages[index];
+                          return Align(
+                            alignment: message.isUser
+                                ? Alignment.centerRight
+                                : Alignment.centerLeft,
+                            child: Container(
+                              margin: const EdgeInsets.symmetric(
+                                vertical: 4,
+                                horizontal: 8,
+                              ),
+                              padding: const EdgeInsets.all(12),
+                              decoration: BoxDecoration(
+                                color: message.isUser
+                                    ? Colors.blue[100]
+                                    : Colors.grey[200],
+                                borderRadius: BorderRadius.circular(15),
+                              ),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  if (!message.isUser)
+                                    const Icon(Icons.smart_toy, size: 20),
+                                  if (message.isUser)
+                                    const Icon(Icons.person, size: 20),
+                                  const SizedBox(width: 8),
+                                  Flexible(
+                                    child: Text(message.content),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          );
+                        },
+                      );
+                    },
                   ),
                 ),
-                const SizedBox(width: 8),
                 Consumer<ChatProvider>(
                   builder: (context, chatProvider, child) {
-                    return IconButton(
-                      icon: const Icon(Icons.send),
-                      onPressed: !_isConnected || chatProvider.isLoading
-                          ? null
-                          : () {
-                              if (_controller.text.isNotEmpty) {
-                                chatProvider.sendMessage(_controller.text);
-                                _controller.clear();
-                              }
-                            },
-                    );
+                    if (chatProvider.isLoading) {
+                      return const Padding(
+                        padding: EdgeInsets.all(8.0),
+                        child: CircularProgressIndicator(),
+                      );
+                    }
+                    return const SizedBox();
                   },
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: TextField(
+                          controller: _controller,
+                          decoration: const InputDecoration(
+                            hintText: 'Type a message...',
+                            border: OutlineInputBorder(),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      Consumer<ChatProvider>(
+                        builder: (context, chatProvider, child) {
+                          return IconButton(
+                            icon: const Icon(Icons.send),
+                            onPressed: !_isConnected || chatProvider.isLoading
+                                ? null
+                                : () {
+                                    if (_controller.text.isNotEmpty) {
+                                      chatProvider
+                                          .sendMessage(_controller.text);
+                                      _controller.clear();
+                                    }
+                                  },
+                          );
+                        },
+                      ),
+                    ],
+                  ),
                 ),
               ],
             ),
-          ),
-        ],
-      ),
     );
   }
 
@@ -177,20 +181,16 @@ class _ChatScreenState extends State<ChatScreen> {
           ),
           body: MobileScanner(
             controller: MobileScannerController(
-              detectionSpeed: DetectionSpeed.normal,
+              detectionSpeed: DetectionSpeed.noDuplicates,
               facing: CameraFacing.back,
             ),
-            onDetect: (capture) async {
+            onDetect: (capture) {
               final List<Barcode> barcodes = capture.barcodes;
               for (final barcode in barcodes) {
                 final rawValue = barcode.rawValue;
                 if (rawValue != null) {
-                  Uri? uri = Uri.tryParse(rawValue);
-                  if (uri != null &&
-                      (uri.scheme == 'http' || uri.scheme == 'https')) {
-                    Navigator.of(context).pop(rawValue);
-                    return;
-                  }
+                  Navigator.of(context).pop(rawValue);
+                  return;
                 }
               }
             },
