@@ -23,6 +23,13 @@ class _ChatScreenState extends State<ChatScreen> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       Provider.of<ChatProvider>(context, listen: false).loadMessages();
     });
+
+    // Listen for connectivity changes
+    Connectivity().onConnectivityChanged.listen((List<ConnectivityResult> results) {
+      setState(() {
+        _isConnected = results.isNotEmpty && results.first != ConnectivityResult.none;
+      });
+    });
   }
 
   Future<void> _checkConnectivity() async {
@@ -44,7 +51,30 @@ class _ChatScreenState extends State<ChatScreen> {
           ),
         ],
       ),
-      body: Column(
+      body: !_isConnected 
+        ? Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Icon(
+                  Icons.signal_wifi_off,
+                  size: 100,
+                  color: Colors.grey,
+                ),
+                const SizedBox(height: 20),
+                Text(
+                  'No internet connection',
+                  style: Theme.of(context).textTheme.titleLarge,
+                ),
+                const SizedBox(height: 10),
+                Text(
+                  'Please check your network settings',
+                  style: Theme.of(context).textTheme.bodyMedium,
+                ),
+              ],
+            ),
+          )
+        : Column(
         children: [
           Expanded(
             child: Consumer<ChatProvider>(

@@ -29,7 +29,7 @@ class MyApp extends StatelessWidget {
         providers: [
           ChangeNotifierProvider(create: (context) => ChatProvider()),
         ],
-        child: MainScreen(),
+        child: const MainScreen(),
       ),
       debugShowCheckedModeBanner: false,
     );
